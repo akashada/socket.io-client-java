@@ -276,7 +276,9 @@ public class Socket extends Emitter {
     }
 
     private void onpacket(Packet<?> packet) {
-        if (!this.nsp.equals(packet.nsp)) return;
+        boolean sameNamespace = this.nsp.equals(packet.nsp);
+        boolean rootNamespaceError = "/".equals(packet.nsp) && packet.type == Parser.ERROR;
+        if (!sameNamespace && !rootNamespaceError) return;
 
         switch (packet.type) {
             case Parser.CONNECT:
